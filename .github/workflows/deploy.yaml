@@ -3,7 +3,7 @@ on:
   push:
     branches:
 
-     -main
+     - main
 
 jobs:
   deploy:
@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    name: Checkout the files
+    - name: Checkout the files
 
       uses: actions/checkout@v3
 
-    name: Copy files with SSH
+    - name: Copy files with SSH
 
       uses: easingthemes/ssh-deploy@main
       env:
