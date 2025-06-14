@@ -17,7 +17,7 @@ app.get('/', async (req, res) => {
   try {
     connection = await mysql.createConnection(dbConfig);
     const [rows] = await connection.execute('SELECT NOW() as now');
-    res.json({ message: 'Here we go baby!', time: rows[0].now });
+    res.json({ message: 'Here we go baby!!', time: rows[0].now });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Database connection failed' });
