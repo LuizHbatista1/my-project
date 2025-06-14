@@ -16,7 +16,7 @@ jobs:
       - name: Criar chave SSH no runner
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          printf "%s\n" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ec2-54-207-206-127.sa-east-1.compute.amazonaws.com >> ~/.ssh/known_hosts
 
