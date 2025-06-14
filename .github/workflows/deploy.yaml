@@ -1,31 +1,28 @@
-name: Deploy para EC2 via SSH
-
+name: Push-to-EC2
 on:
   push:
     branches:
-      - main  # ou a branch que você quiser
+
+    - main
 
 jobs:
   deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
 
-      - name: Criar chave SSH no runner
-        run: |
-          mkdir -p ~/.ssh
-          printf "%s\n" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ec2-54-207-206-127.sa-east-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+    - name: Checkout the files
 
-      - name: Executar rsync para EC2
-        run: |
-          rsync -rltgoDzvO --delete ./ ec2-user@ec2-54-207-206-127.sa-east-1.compute.amazonaws.com:/home/ec2-user \
-            --rsh "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            --exclude=/dist/ \
-            --exclude=/node_modules/ \
-            --exclude=**.env \
-            --exclude=rebuild_app.sh \
-            --exclude=watcher.sh
+      uses: actions/checkout@v3
+
+    - name: Copy files with SSH
+
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
+        ARGS: "-rltgoDzvO --delete"
+        SOURCE: "./"
+        REMOTE_HOST: "ec2-54-207-206-127.sa-east-1.compute.amazonaws.com"
+        REMOTE_USER: "ec2-user"
+        TARGET: "/home/user"
+        EXCLUDE: "/dist/, /node_modules/, **.env, rebuild_app.sh, watcher.sh"
